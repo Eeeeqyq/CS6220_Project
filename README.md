@@ -59,8 +59,28 @@ Unzip each file into `data/raw/` so you end up with `data/raw/YYYY_MM.csv`.
 
 ## Setup
 
+We use a virtual environment in `.venv/` at the repo root (already in `.gitignore`). It was created with Python 3.14 (Homebrew `python3.14`), but Python 3.10+ should work. The macOS built-in `/usr/bin/python3` (3.9) is too old.
+
 ```bash
+python3 -m venv .venv          # or: python3.14 -m venv .venv
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install --upgrade pip
 pip install -r requirements.txt
+```
+
+`requirements.txt` installs pandas, numpy, pyarrow, scikit-learn, lightgbm, xgboost, matplotlib, seaborn, jupyter, and ipykernel.
+
+Optionally, register the environment as a Jupyter kernel:
+
+```bash
+python -m ipykernel install --user --name cs6220 --display-name "CS6220 (.venv)"
+```
+
+> **Note (macOS):** LightGBM and XGBoost need OpenMP. If importing either fails with a `libomp` error, run `brew install libomp`.
+
+Then prepare the data:
+
+```bash
 python src/prepare_data.py   # converts data/raw/*.csv to Parquet in data/processed/
 ```
 
@@ -68,4 +88,4 @@ To explore the data without downloading anything, use `sample_2024_01.csv`.
 
 ## Note on Data
 
-The raw data is not committed because the monthly files exceed GitHub's file size limits. Only the small `sample_2024_01.csv` is tracked in the repo.
+The raw data is not committed because the monthly files exceed GitHub's file size limits. Only the small `sample_2024_01.csv` is tracked in the repo. `.gitignore` excludes `data/`, `*.csv`, `*.zip`, and `*.parquet`, with an exception for `sample_2024_01.csv`.
